@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>youtube clone</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700&display=swap');
+        body{
+            margin: 0;
+            padding-top: 76px;
+            padding-left: 96px;
+            padding-right: 24px;
+            background-color: rgb(248, 241, 241);
+        }
+        
+        p{
+            font-family: 'Poppins', sans-serif;
+            margin-top: 0;
+            margin-bottom: 0;
+        }
+        .thumbnail{
+            width: 100%;
+        }
+        
+        .profile-picture{
+            border-radius: 50%;
+            width: 36px;       
+        }
+        .thumbnail-row{
+            margin-bottom: 8px;
+            position: relative;
+            cursor: pointer;
+        }
+        .thumbnail-row:active{
+            opacity: 0.7;
+        }
+        .video-time{
+            position: absolute;
+            bottom: 10px;
+            padding: 2px 4px;
+            right: 5px;
+            background-color: black;
+            color: white;
+            font-family: 'Poppins', sans-serif;
+            font-size: 12px;
+            font-weight: 600;
+            border-radius: 2px;
+        }
+        .video-title{
+            font-size: 16px;
+            font-weight: 600;
+            line-height: 20px;
+            margin-bottom: 10px;
+        }
+        .video-author{
+            font-size: 14px;
+            color: rgb(96,96,96);
+            margin-bottom: 4px;
+        }
+        .video-stats{
+            font-size: 14px;
+            color: rgb(96,96,96);
+        }
+        .video-info-grid{
+            display: grid;
+            grid-template-columns: 50px 1fr;
+        }
+        .video-grid{
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            row-gap: 40px;
+            column-gap: 16px;
+        }
+        
+        @media(max-width:700px){
+            .video-grid{
+                grid-template-columns:1fr 1fr ;
+            }
+           
+        }
+        @media(min-width:701px)and(max-width:1199px){
+            .video-grid{
+                grid-template-columns:1fr 1fr 1fr ;
+            }
+        }
+        @media(min-width:1200px){
+            .video-grid{
+                grid-template-columns:1fr 1fr 1fr 1fr ;
+            }
+        }
+        
+        
+        .header{
+            height: 55px;
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background-color: white;
+            z-index: 100;
+            border-bottom-width: 1px;
+            border-bottom-style:solid;
+            border-bottom-color: rgb(229, 224, 224);
+        }
+        .left{
+            display: flex;
+            align-items: center;
+        }
+        .hamburger-menu{
+            height: 24px;
+            margin-left: 24px;
+            margin-right: 24px;
+        }
+        .youtube-logo{
+            height: 20px;
+        }
+        .middle{
+            flex: 1;
+            display: flex;
+            margin-left: 70px;
+            margin-right: 35px;
+            max-width: 500px;
+            align-items: center;
+        }
+        .search-bar{
+            flex: 1;
+            height: 36px;
+            padding-left: 10px;
+            width: 0;
+            font-size: 16px;
+            border-width: 1px;
+            border-style: solid;
+            border-color: rgb(192, 192, 192);
+            border-radius: 3px;
+            box-shadow: inset 1px 2px 3px rgba(0,0,0,0.05);
+        }
+        .search-bar::placeholder{
+            font-family: 'Poppins', sans-serif;
+            font-size: 16px;
+        }
+        .search-icon{
+            height: 25px;
+            margin-top: 4px;
+        }
+        .search-button{
+            height: 39px;
+            width: 60px;
+            background-color: rgb(240,240,240);
+            border: 1px solid rgb(192, 192, 192);
+            margin-left: -1px;
+            margin-right: 10px;
+            border-radius: 0px 20px 20px 0px;
+            margin-left: -10px;
+        }
+        .voice-search-button{
+            height: 40px;
+            width: 40px;
+            border-radius: 20px;
+            border: none;
+            background-color: rgb(245,245,245);
+        }
+        .voice-search-icon{
+            height: 24px;
+            margin-top: 4px;
+        }
+        .right{
+            width: 180px;
+            margin-right: 20px;
+            display: flex;
+            flex-shrink: 0;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .upload-icon{
+            height: 24px;
+        }
+        .youtube-apps-icon{
+            height: 24px;
+        }
+        .notifications-icon{
+            height: 24px;
+        }
+        .user-picture{
+            height: 32px;
+            border-radius: 16px;
+        }
+        .side-bar{
+            position: fixed;
+            top: 55px;
+            left: 0;
+            bottom: 0;
+            width: 74px;
+            background-color: white;
+            display: flex;
+            flex-direction: column;
+            cursor: pointer;
+            
+            padding: 10px 0;
+        }
+        
+        .notification-icon-container{
+            position: relative;
+        }
+        .notification-count{
+            position: absolute;
+            top: -2px;
+            right: -5px;
+            background-color: rgb(200, 0, 0);
+            color: black;
+            padding: 2px 5px;
+            border-radius: 10px;
+            font-size: 11px;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;  
+        }
+        .sidebar-link{
+            height: 74px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+        .sidebar-link:hover{
+            background-color: rgb(235,235,235);
+        }
+        .sidebar-link img{
+            width: 30px;
+        }
+        .sidebar-link div{
+            font-family: 'Poppins', sans-serif;
+            font-size: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="left">
+            <img class="hamburger-menu" src="pics/hamburger-menu.svg" alt="">
+            <img class="youtube-logo" src="pics/youtube-logo.svg" alt="">
+        </div>
+        <div class="middle">
+            <input type="text" placeholder="Search" class="search-bar">
+            <button class="search-button">
+                <img class="search-icon" src="pics/search.svg" alt="">
+            </button>
+            <button class="voice-search-button">
+                <img class="voice-search-icon" src="pics/voice-search-icon.svg" alt="">
+            </button>
+        </div>
+        <div class="right">
+            <img class="upload-icon" src="pics/upload.svg" alt="">
+            <img class="youtube-apps-icon" src="pics/youtube-apps.svg" alt="">
+            <div class="notification-icon-container">
+                <img class="notifications-icon" src="pics/notifications.svg" alt="">
+                <div class="notification-count">3</div>
+            </div>
+            <img class="user-picture" src="gani.jpg" alt="">
+        </div>
+        </div>
+        <div class="side-bar">
+            <div class="sidebar-link">
+                <img src="pics/home.svg" alt="">
+                <div>Home</div>
+            </div>
+            <div class="sidebar-link">
+                <img src="pics/explore.svg" alt="">
+                <div>explore</div>
+            </div>
+            <div class="sidebar-link">
+                <img src="pics/originals.svg" alt="">
+                <div>Originals</div>
+            </div>
+            <div class="sidebar-link">
+                <img src="pics/subscriptions.svg" alt="">
+                <div>Subscriptions</div>
+            </div>
+            <div class="sidebar-link">
+                <img src="pics/library.svg" alt="">
+                <div>library </div>
+            </div>
+            <div class="sidebar-link">
+                <img src="pics/youtube-music.svg" alt="">
+                <div>youtube Music</div>
+            </div>
+        </div>
+
+    <div class="video-grid">
+        <div class="video-preview">
+            <div class="thumbnail-row">
+                <img class="thumbnail" src="pics/pic1.webp" alt="">
+                <div class="video-time">14:30</div>
+            </div>
+            <div class="video-info-grid">
+                <div class="channel-picture">
+                    <img class="profile-picture" src="gani.jpg" alt="">
+                </div>
+                <div class="video-info">
+                    <p class="video-title">
+                        Heeriye song Beautiful Movie song ever seen in 2023!
+                    </p>
+                    <p class="video-author">
+                        Puvvala SaiGanesh
+                    </p>
+                    <p class="video-stats">
+                        3.4M views &#183; 6 months ago
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="video-preview">
+            <div class="thumbnail-row">
+                <img class="thumbnail" src="pics/pic3.webp" alt="">
+                <div class="video-time">14:30</div>
+            </div>
+            <div class="video-info-grid">
+                <div class="channel-picture">
+                    <img class="profile-picture" src="gani.jpg" alt="">
+                </div>
+                <div class="video-info">
+                    <p class="video-title">
+                        Heeriye song Beautiful Movie song ever seen in 2023!
+                    </p>
+                    <p class="video-author">
+                        Puvvala SaiGanesh
+                    </p>
+                    <p class="video-stats">
+                        3.4M views &#183; 6 months ago
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="video-preview">
+            <div class="thumbnail-row">
+                <img class="thumbnail" src="pics/pic1.webp" alt="">
+                <div class="video-time">14:30</div>
+            </div>
+            <div class="video-info-grid">
+                <div class="channel-picture">
+                    <img class="profile-picture" src="gani.jpg" alt="">
+                </div>
+                <div class="video-info">
+                    <p class="video-title">
+                        Heeriye song Beautiful Movie song ever seen in 2023!
+                    </p>
+                    <p class="video-author">
+                        Puvvala SaiGanesh
+                    </p>
+                    <p class="video-stats">
+                        3.4M views &#183; 6 months ago
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="video-preview">
+            <div class="thumbnail-row">
+                <img class="thumbnail" src="pics/pic3.webp" alt="">
+                <div class="video-time">14:30</div>
+            </div>
+            <div class="video-info-grid">
+                <div class="channel-picture">
+                    <img class="profile-picture" src="gani.jpg" alt="">
+                </div>
+                <div class="video-info">
+                    <p class="video-title">
+                        Heeriye song Beautiful Movie song ever seen in 2023!
+                    </p>
+                    <p class="video-author">
+                        Puvvala SaiGanesh
+                    </p>
+                    <p class="video-stats">
+                        3.4M views &#183; 6 months ago
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="video-preview">
+            <div class="thumbnail-row">
+                <img class="thumbnail" src="pics/pic1.webp" alt="">
+                <div class="video-time">14:30</div>
+            </div>
+            <div class="video-info-grid">
+                <div class="channel-picture">
+                    <img class="profile-picture" src="gani.jpg" alt="">
+                </div>
+                <div class="video-info">
+                    <p class="video-title">
+                        Heeriye song Beautiful Movie song ever seen in 2023!
+                    </p>
+                    <p class="video-author">
+                        Puvvala SaiGanesh
+                    </p>
+                    <p class="video-stats">
+                        3.4M views &#183; 6 months ago
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="video-preview">
+            <div class="thumbnail-row">
+                <img class="thumbnail" src="pics/pic3.webp" alt="">
+                <div class="video-time">14:30</div>
+            </div>
+            <div class="video-info-grid">
+                <div class="channel-picture">
+                    <img class="profile-picture" src="gani.jpg" alt="">
+                </div>
+                <div class="video-info">
+                    <p class="video-title">
+                        Heeriye song Beautiful Movie song ever seen in 2023!
+                    </p>
+                    <p class="video-author">
+                        Puvvala SaiGanesh
+                    </p>
+                    <p class="video-stats">
+                        3.4M views &#183; 6 months ago
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="video-preview">
+            <div class="thumbnail-row">
+                <img class="thumbnail" src="pics/pic1.webp" alt="">
+                <div class="video-time">14:30</div>
+            </div>
+            <div class="video-info-grid">
+                <div class="channel-picture">
+                    <img class="profile-picture" src="gani.jpg" alt="">
+                </div>
+                <div class="video-info">
+                    <p class="video-title">
+                        Heeriye song Beautiful Movie song ever seen in 2023!
+                    </p>
+                    <p class="video-author">
+                        Puvvala SaiGanesh
+                    </p>
+                    <p class="video-stats">
+                        3.4M views &#183; 6 months ago
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="video-preview">
+            <div class="thumbnail-row">
+                <img class="thumbnail" src="pics/pic3.webp" alt="">
+                <div class="video-time">14:30</div>
+            </div>
+            <div class="video-info-grid">
+                <div class="channel-picture">
+                    <img class="profile-picture" src="gani.jpg" alt="">
+                </div>
+                <div class="video-info">
+                    <p class="video-title">
+                        Heeriye song Beautiful Movie song ever seen in 2023!
+                    </p>
+                    <p class="video-author">
+                        Puvvala SaiGanesh
+                    </p>
+                    <p class="video-stats">
+                        3.4M views &#183; 6 months ago
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="video-preview">
+            <div class="thumbnail-row">
+                <img class="thumbnail" src="pics/pic1.webp" alt="">
+                <div class="video-time">14:30</div>
+            </div>
+            <div class="video-info-grid">
+                <div class="channel-picture">
+                    <img class="profile-picture" src="gani.jpg" alt="">
+                </div>
+                <div class="video-info">
+                    <p class="video-title">
+                        Heeriye song Beautiful Movie song ever seen in 2023!
+                    </p>
+                    <p class="video-author">
+                        Puvvala SaiGanesh
+                    </p>
+                    <p class="video-stats">
+                        3.4M views &#183; 6 months ago
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="video-preview">
+            <div class="thumbnail-row">
+                <img class="thumbnail" src="pics/pic3.webp" alt="">
+                <div class="video-time">14:30</div>
+            </div>
+            <div class="video-info-grid">
+                <div class="channel-picture">
+                    <img class="profile-picture" src="gani.jpg" alt="">
+                </div>
+                <div class="video-info">
+                    <p class="video-title">
+                        Heeriye song Beautiful Movie song ever seen in 2023!
+                    </p>
+                    <p class="video-author">
+                        Puvvala SaiGanesh
+                    </p>
+                    <p class="video-stats">
+                        3.4M views &#183; 6 months ago
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="video-preview">
+            <div class="thumbnail-row">
+                <img class="thumbnail" src="pics/pic1.webp" alt="">
+                <div class="video-time">14:30</div>
+            </div>
+            <div class="video-info-grid">
+                <div class="channel-picture">
+                    <img class="profile-picture" src="gani.jpg" alt="">
+                </div>
+                <div class="video-info">
+                    <p class="video-title">
+                        Heeriye song Beautiful Movie song ever seen in 2023!
+                    </p>
+                    <p class="video-author">
+                        Puvvala SaiGanesh
+                    </p>
+                    <p class="video-stats">
+                        3.4M views &#183; 6 months ago
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="video-preview">
+            <div class="thumbnail-row">
+                <img class="thumbnail" src="pics/pic3.webp" alt="">
+                <div class="video-time">14:30</div>
+            </div>
+            <div class="video-info-grid">
+                <div class="channel-picture">
+                    <img class="profile-picture" src="gani.jpg" alt="">
+                </div>
+                <div class="video-info">
+                    <p class="video-title">
+                        Heeriye song Beautiful Movie song ever seen in 2023!
+                    </p>
+                    <p class="video-author">
+                        Puvvala SaiGanesh
+                    </p>
+                    <p class="video-stats">
+                        3.4M views &#183; 6 months ago
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
